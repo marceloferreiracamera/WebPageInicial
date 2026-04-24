@@ -688,8 +688,8 @@
 </footer>
 
 <script>
-  // === LISTA DE IMAGENS ===
-  // Note que usei exatamente os nomes dos arquivos que aparecem no seu VS Code
+document.addEventListener('DOMContentLoaded', function() {
+  // === 1. LISTA DE ARQUIVOS (Exatamente como no seu VS Code) ===
   const galleryImages = [
     { src: 'foto1.jpg', caption: 'Set de Gravação' },
     { src: 'foto2.jpg', caption: 'Equipamento' },
@@ -703,7 +703,6 @@
     { src: 'foto-set-2.jpg', caption: 'Set Profissional' }
   ];
 
-  // === LISTA DE VÍDEOS ===
   const videoFiles = [
     { src: 'video1.mp4', label: 'Bastidores 01' },
     { src: 'video2.mp4', label: 'Bastidores 02' },
@@ -713,12 +712,13 @@
     { src: 'video6.mp4', label: 'Bastidores 06' }
   ];
 
-  // Renderizar Galeria
+  // === 2. RENDERIZAR GALERIA ===
   const grid = document.getElementById('galleryGrid');
   if (grid) {
+    grid.innerHTML = ''; // Limpa o "esqueleto" de carregamento
     galleryImages.forEach((img, i) => {
       const div = document.createElement('div');
-      div.className = 'gallery-item' + (img.cls ? ' ' + img.cls : '');
+      div.className = 'gallery-item';
       div.innerHTML = `
         <img src="${img.src}" alt="${img.caption}" loading="lazy">
         <div class="gallery-overlay"><span>${img.caption}</span></div>
@@ -728,9 +728,10 @@
     });
   }
 
-  // Renderizar Vídeos
+  // === 3. RENDERIZAR VÍDEOS ===
   const vgrid = document.getElementById('videoGrid');
   if (vgrid) {
+    vgrid.innerHTML = ''; 
     videoFiles.forEach(v => {
       const div = document.createElement('div');
       div.className = 'video-card';
@@ -743,64 +744,58 @@
       vgrid.appendChild(div);
     });
   }
+});
 
-  // Lightbox
-  function openLightbox(i) {
-    const lbImg = document.getElementById('lightboxImg');
-    if (lbImg) {
-      lbImg.src = galleryImages[i].src;
-      document.getElementById('lightbox').classList.add('active');
-    }
+// === 4. FUNÇÕES GERAIS (Fora do DOMContentLoaded para serem globais) ===
+function openLightbox(i) {
+  // galleryImages aqui precisa ser acessível ou a função movida para dentro
+  // Para simplificar, vamos usar o src direto da imagem clicada se necessário
+  const lbImg = document.getElementById('lightboxImg');
+  const allImgs = document.querySelectorAll('.gallery-item img');
+  if (lbImg && allImgs[i]) {
+    lbImg.src = allImgs[i].src;
+    document.getElementById('lightbox').classList.add('active');
+  }
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+async function handleSubmit() {
+  const btn = document.querySelector('.form-submit');
+  const name = document.getElementById('fname').value;
+  const email = document.getElementById('femail').value;
+  const msg = document.getElementById('fmsg').value;
+
+  if (!name || !email || !msg) {
+    alert('Preencha os campos obrigatórios.');
+    return;
   }
 
-  function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('active');
-  }
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
 
-  // Scroll Navbar
-  window.addEventListener('scroll', () => {
-    const nav = document.getElementById('mainNav');
-    if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
-  });
-
-  // === FORMULÁRIO (Função Corrigida) ===
-  async function handleSubmit() {
-    const btn = document.querySelector('.form-submit');
-    const fields = {
-      name: document.getElementById('fname').value,
-      email: document.getElementById('femail').value,
-      msg: document.getElementById('fmsg').value,
-      project: document.getElementById('fproject').value,
-      phone: document.getElementById('fphone').value
-    };
-
-    if (!fields.name || !fields.email || !fields.msg) {
-      alert('Por favor, preencha os campos obrigatórios.');
-      return;
+  try {
+    const response = await fetch('https://formspree.io/f/xaqayepw', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message: msg })
+    });
+    if (response.ok) {
+      document.getElementById('successMsg').style.display = 'block';
+      btn.textContent = 'Enviado ✓';
     }
-
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
-
-    try {
-      const response = await fetch('https://formspree.io/f/xaqayepw', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(fields)
-      });
-
-      if (response.ok) {
-        document.getElementById('successMsg').style.display = 'block';
-        btn.textContent = 'Mensagem Enviada ✓';
-      } else {
-        throw new Error();
-      }
-    } catch (e) {
-      alert('Erro ao enviar. Tente novamente.');
-      btn.disabled = false;
-      btn.textContent = 'Enviar Mensagem →';
-    }
+  } catch (e) {
+    alert('Erro ao enviar.');
+    btn.disabled = false;
   }
+}
 </script>
 </body>
 </html>
