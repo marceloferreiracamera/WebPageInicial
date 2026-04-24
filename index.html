@@ -688,7 +688,7 @@
 </footer>
 
 <script>
-  // === LISTA DE IMAGENS ATUALIZADA ===
+  // === LISTA DE IMAGENS (Padronizado para minúsculo conforme seu Git) ===
   const galleryImages = [
     { src: 'foto1.jpg', caption: 'Set de Gravação' },
     { src: 'foto2.jpg', caption: 'Equipamento' },
@@ -699,11 +699,9 @@
     { src: 'foto7.jpg', caption: 'Trabalho em Campo' },
     { src: 'foto8.jpg', caption: 'Monitor de Referência' },
     { src: 'foto13.jpg', caption: 'Foco Pulling' }
-    // Adicione as do WhatsApp se elas estiverem na mesma pasta
-    { src: 'WhatsApp_Image_2026-04-23_at_12_03_14.jpeg', caption: 'Evento', cls: 'tall' }
   ];
 
-  // === LISTA DE VÍDEOS (Ajustada para .MP4 maiúsculo) ===
+  // === LISTA DE VÍDEOS ===
   const videoFiles = [
     { src: 'video1.mp4', label: 'BTS 01' },
     { src: 'video2.mp4', label: 'BTS 02' },
@@ -713,34 +711,38 @@
     { src: 'video6.mp4', label: 'BTS 06' }
   ];
 
-  // Renderizar Galeria (Com correção de erro visual)
+  // Renderizar Galeria
   const grid = document.getElementById('galleryGrid');
-  galleryImages.forEach((img, i) => {
-    const div = document.createElement('div');
-    div.className = 'gallery-item' + (img.cls ? ' ' + img.cls : '');
-    div.innerHTML = `
-      <img src="${img.src}" alt="${img.caption}" onerror="this.parentElement.style.border='1px solid red'; console.log('Erro ao carregar: ${img.src}')">
-      <div class="gallery-overlay"><span>${img.caption}</span></div>
-    `;
-    div.onclick = () => openLightbox(i);
-    grid.appendChild(div);
-  });
+  if(grid) {
+      galleryImages.forEach((img, i) => {
+        const div = document.createElement('div');
+        div.className = 'gallery-item' + (img.cls ? ' ' + img.cls : '');
+        div.innerHTML = `
+          <img src="${img.src}" alt="${img.caption}" loading="lazy">
+          <div class="gallery-overlay"><span>${img.caption}</span></div>
+        `;
+        div.onclick = () => openLightbox(i);
+        grid.appendChild(div);
+      });
+  }
 
   // Renderizar Vídeos
   const vgrid = document.getElementById('videoGrid');
-  videoFiles.forEach(v => {
-    const div = document.createElement('div');
-    div.className = 'video-card';
-    div.innerHTML = `
-      <video src="${v.src}" muted loop playsinline></video>
-      <div class="gallery-overlay"><span>${v.label}</span></div>
-    `;
-    div.onmouseenter = () => div.querySelector('video').play();
-    div.onmouseleave = () => div.querySelector('video').pause();
-    vgrid.appendChild(div);
-  });
+  if(vgrid) {
+      videoFiles.forEach(v => {
+        const div = document.createElement('div');
+        div.className = 'video-card';
+        div.innerHTML = `
+          <video src="${v.src}" muted loop playsinline></video>
+          <div class="gallery-overlay"><span>${v.label}</span></div>
+        `;
+        div.onmouseenter = () => div.querySelector('video').play();
+        div.onmouseleave = () => div.querySelector('video').pause();
+        vgrid.appendChild(div);
+      });
+  }
 
-  // Funções do Lightbox
+  // Funções Lightbox
   function openLightbox(i) {
     document.getElementById('lightboxImg').src = galleryImages[i].src;
     document.getElementById('lightbox').classList.add('active');
@@ -749,12 +751,13 @@
     document.getElementById('lightbox').classList.remove('active');
   }
 
-  // Efeito da Barra de Navegação no Scroll
+  // Nav Scroll
   window.addEventListener('scroll', () => {
-    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+    const nav = document.getElementById('mainNav');
+    if(nav) nav.classList.toggle('scrolled', window.scrollY > 50);
   });
 
-  // === FUNÇÃO DE ENVIO DE E-MAIL (SUA ORIGINAL CORRIGIDA) ===
+  // === SEU FORMULÁRIO (CORRIGIDO) ===
   async function handleSubmit() {
     const name = document.getElementById('fname').value;
     const email = document.getElementById('femail').value;
