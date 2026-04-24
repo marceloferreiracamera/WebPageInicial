@@ -690,44 +690,36 @@
 <script>
   // === LISTA DE IMAGENS ATUALIZADA ===
   const galleryImages = [
-    { src: 'WhatsApp_Image_2026-04-23_at_12_03_14.jpeg', caption: 'Cobertura de Evento', cls: 'tall' },
-    { src: 'WhatsApp_Image_2026-04-23_at_12_03_17.jpeg', caption: 'ARRI on Set' },
-    { src: 'foto1.jpg', caption: 'Bastidores' },
-    { src: 'foto2.jpg', caption: 'Equipamento Profissional' },
-    { src: 'foto3.jpg', caption: 'Set de Gravação' },
-    { src: 'foto4.jpg', caption: 'Produção Audiovisual' },
-    { src: 'foto5.jpg', caption: 'Configuração de Lente' },
-    { src: 'foto6.jpg', caption: 'Iluminação de Set' },
-    { src: 'foto7.jpg', caption: 'Equipe em Ação' },
+    { src: 'foto1.jpg', caption: 'Set de Gravação' },
+    { src: 'foto2.jpg', caption: 'Equipamento' },
+    { src: 'foto3.jpg', caption: 'Bastidores' },
+    { src: 'foto4.jpg', caption: 'Produção' },
+    { src: 'foto5.jpg', caption: 'Câmera e Lente' },
+    { src: 'foto6.jpg', caption: 'Iluminação' },
+    { src: 'foto7.jpg', caption: 'Trabalho em Campo' },
     { src: 'foto8.jpg', caption: 'Monitor de Referência' },
-    { src: 'foto13.jpg', caption: 'Foco e Detalhe' },
-    { src: 'WhatsApp_Image_2026-04-23_at_12_03_31.jpeg', caption: 'BTS Brasília', cls: 'wide' },
-    { src: 'WhatsApp_Image_2026-04-23_at_12_03_40.jpeg', caption: 'Operação de Câmera' },
-    { src: 'WhatsApp_Image_2026-04-23_at_12_03_41.jpeg', caption: 'Set de Gravação' },
-    { src: 'WhatsApp_Image3_2026-04-23_at_12_03_41.jpeg', caption: 'Produção Corporativa' },
-    { src: 'WhatsApp_Image4_2026-04-23_at_12_03_41.jpeg', caption: 'Camera Rig' },
-    { src: 'WhatsApp_Image5_2026-04-23_at_12_03_43.jpeg', caption: 'SEBRAE' },
-    { src: 'WhatsApp_Image6_2026-04-23_at_12_03_45.jpeg', caption: 'Foco Pulling' },
-    { src: 'WhatsApp_Image7_2026-04-23_at_12_03_45.jpeg', caption: 'Set Cinematográfico' },
-    { src: 'WhatsApp_Image8_2026-04-23_at_12_03_46.jpeg', caption: 'ARRI Alexa XT' }
+    { src: 'foto13.jpg', caption: 'Foco Pulling' },
+    // Adicione as do WhatsApp se elas estiverem na mesma pasta
+    { src: 'WhatsApp_Image_2026-04-23_at_12_03_14.jpeg', caption: 'Evento', cls: 'tall' }
   ];
 
+  // === LISTA DE VÍDEOS ATUALIZADA ===
   const videoFiles = [
-    { src: 'WhatsApp_Video_2026-04-23_at_12_03_14.mp4', label: 'BTS · Produção' },
-    { src: 'WhatsApp_Video_2026-04-23_at_12_03_19.mp4', label: 'BTS · Set' },
-    { src: 'WhatsApp_Video_2026-04-23_at_12_03_30.mp4', label: 'BTS · Câmera' },
-    { src: 'WhatsApp_Video_2026-04-23_at_12_03_40.mp4', label: 'BTS · Externos' },
-    { src: 'WhatsApp_Video_2026-04-23_at_12_03_50.mp4', label: 'BTS · Gravação' },
-    { src: 'WhatsApp_Video_2026-04-23_at_12_03_58.mp4', label: 'BTS · Making Of' },
+    { src: 'video1.mp4', label: 'BTS 01' },
+    { src: 'video2.mp4', label: 'BTS 02' },
+    { src: 'video3.mp4', label: 'BTS 03' },
+    { src: 'video4.mp4', label: 'BTS 04' },
+    { src: 'video5.mp4', label: 'BTS 05' },
+    { src: 'video6.mp4', label: 'BTS 06' }
   ];
 
-  // Renderizar Galeria de Imagens
+  // Renderizar Galeria (Com correção de erro visual)
   const grid = document.getElementById('galleryGrid');
   galleryImages.forEach((img, i) => {
     const div = document.createElement('div');
     div.className = 'gallery-item' + (img.cls ? ' ' + img.cls : '');
     div.innerHTML = `
-      <img src="${img.src}" alt="${img.caption}" loading="lazy">
+      <img src="${img.src}" alt="${img.caption}" onerror="this.parentElement.style.border='1px solid red'; console.log('Erro ao carregar: ${img.src}')">
       <div class="gallery-overlay"><span>${img.caption}</span></div>
     `;
     div.onclick = () => openLightbox(i);
